@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envoyer un message WhatsApp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+     
+     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="style2.css">
+
+
+</head>
+<body>
+ <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#"><img src="viva.jpg" width="100px"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="Home.html">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="sms.html">sms</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Menu
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="Contact.Us.html" tabindex="-1">Contact Us</a>
+      </li>
+    </ul>
+</div>
+</nav>
+    <script src="./map.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Mon Site Web</h1>
+            <nav>
+                <ul>
+                    <!-- <li><a href="index.html">Accueil</a></li> -->
+                    <li><a href="index.html">Contact</a></li>
+                    <li><a href="whatsapp.html" class="active">WhatsApp</a></li>
+                    <li><a href="sms.html" class="active">SMS</a></li>
+                    <li><a href="stripe.html" class="active">Stripe</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="whatspp">
+            <h2>Envoyer un SMS</h2>
+            <form id="smsForm">
+                <div class="form-group">
+                    <label for="to">Numéro de destinataire (SMS):</label>
+                    <input type="text" id="to" name="to" placeholder="+257XXXXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" placeholder="Votre message ici..." rows="3" cols="45" required></textarea>
+                </div>
+                <div class="sub12">
+                <button type="submit" class="btn btn-success btn-lg btn-block">Envoyer</button>
+            </div>
+            </form>
+            <p id="response" class="hidden"></p>
+        </div>
+    </main>
+    <script>
+document.getElementById('smsForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const to = document.getElementById('to').value;
+    const message = document.getElementById('message').value; //GDWASRS7QLGEREKM5Q68FAYQ
+
+    // Vos informations Twilio
+    const accountSid = "ACc03e7b3873062df88f5b0699e5bb25de"; 
+    const authToken = "f628b164ebfb26730a2b79d5ef9a5d2d"; 
+    const twilioPhoneNumber = "+17752788198";
+
+    const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+
+    // Création de l'objet FormData
+    const formData = new FormData();
+    formData.append('To', to);
+    formData.append('From', twilioPhoneNumber);
+    formData.append('Body', message);
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Basic ' + btoa(`${accountSid}:${authToken}`),
+            },
+            body: formData,
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            document.getElementById('response').classList.remove('hidden');
+            document.getElementById('response').innerText = "Message envoyé avec succès!";
+        } else {
+            throw new Error(result.message || "Une erreur s'est produite.");
+        }
+    } catch (error) {
+        document.getElementById('response').classList.remove('hidden');
+        document.getElementById('response').innerText = `Erreur: ${error.message}`;
+    }
+});
+
+
+    </script>
+</body>
+</html>
